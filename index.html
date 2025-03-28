@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise Testing Calculator</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --below-avg-color: #e74c3c;
+            --avg-color: #f39c12;
+            --above-avg-color: #2ecc71;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fdfdfd;
+            color: var(--dark-color);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            /* box-shadow: 0 4px 15px rgba(0,0,0,0.1); */
+            padding: 5px;
+            margin-bottom: 10px;
+
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: none;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #f1f4f7;
+        }
+        
+        td:first-child {
+            font-weight: bold;
+            color: var(--dark-color);
+            width: 180px; /* Set a fixed width for the Test Type column */
+            min-width: 180px;
+            text-align: left;
+        }
+        
+        input {
+            width: 70px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 8px 5px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: all 0.2s ease;
+            background-color: white;
+        }
+        
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+            animation: pulse-success 0.5s;
+        }
+        
+        .incorrect {
+            background-color: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+            animation: shake 0.5s;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 5px;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #generate-btn {
+            background-color: var(--primary-color);
+        }
+        
+        #check-btn {
+            background-color: var(--secondary-color);
+        }
+        
+        #formula-btn {
+            background-color: var(--accent-color);
+        }
+        
+        #reset-btn {
+            background-color: #95a5a6;
+        }
+        
+        .instructions {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .instructions::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--primary-color);
+        }
+        
+        .instructions h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .formula-box {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.95em;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .change-cell {
+            background-color: #eaf2fd;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        #feedback {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        #feedback h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .score-display {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 15px 0;
+            color: var(--dark-color);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+        
+        @keyframes pulse-success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+            100% { transform: translateX(0); }
+        }
+        
+        .test-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            margin-left: 5px;
+            color: var(--primary-color);
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Z-score plot styles */
+        .z-score-container {
+            margin-top: 30px;
+            padding: 10px 10px 10px 10px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .z-score-title {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1px;
+            margin-top: 1px; /* Added to reduce top space */
+        }
+
+        .z-score-plot {
+            width: 100%;
+            height: 280px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+
+        .below-avg {
+            background-color: var(--below-avg-color);
+        }
+
+        .within-avg {
+            background-color: var(--avg-color);
+        }
+
+        .above-avg {
+            background-color: var(--above-avg-color);
+        }
+
+        .z-score-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+            border: 2px solid white;
+            transition: all 0.5s ease;
+        }
+
+        .label-box {
+            position: absolute;
+            background: white;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transform: translate(-50%, -100%);
+            margin-top: -10px;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Explaining exercise results to clients💪</h1>
+    
+    <div class="container">
+        <div class="instructions">
+            <h3>Case study:</h3>
+            <p>You're a sports scientist analyzing athlete data. Your task is to determine if their changes in performance are meaningful!</p>
+            <ol>
+                <li>Click "Generate Test Data" to simulate athlete test results</li>
+                <li>The Change values will be calculated automatically</li>
+                <li>Calculate the important thresholds:</li>
+                <ul>
+                    <li>MDC (Minimal Detectable Change) <span class="tooltip">ⓘ<span class="tooltiptext">The smallest change that represents a real change, not just measurement error.</span></span></li>
+                    <li>MCID (Minimal Clinically Important Difference) <span class="tooltip">ⓘ<span class="tooltiptext">The threshold for a change that would be meaningful for the client/athlete</span></span></li>
+                </ul>
+                <li>Calculate Z-scores for each test</li>
+                <li>Click "Check Answers" to see how accurate your calculations are</li>
+                <li>Practice explaining what these results mean for the clients performance</li>
+            </ol>
+            
+            <div class="formula-box" id="formula-box" style="display: none;">
+                <h4>Formula Guide:</h4>
+                <ul>
+                    <li>MDC = TE × √2 × 1.96</li>
+                    <li>SWC = 0.2 × SD</li>
+                    <li>MCID = MDC + SWC</li>
+                    <li>Z-score = (Post-Test score - mean) / SD</li>
+                </ul>
+                <p><strong>Tip:</strong> MDC and MCID remain the same for each test type, regardless of the athlete's scores! Z-scores show how far from the mean the athlete's performance is.</p>
+            </div>
+        </div>
+
+        <div id="score-tracker" style="display: none;">
+            <div class="score-display">Score: <span id="current-score">0</span> / <span id="max-score">12</span></div>
+            <div class="progress-container">
+                <div class="progress-bar" id="score-progress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button id="generate-btn">🔄 New Athlete Data</button>
+            <button id="check-btn">✅ Check Calculations</button>
+            <button id="formula-btn">📋 Show Formulas</button>
+            <button id="reset-btn">🔄 Reset All</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <table id="exerciseTable">
+            <thead>
+                <tr>
+                    <th rowspan="2">Test Type</th>
+                    <th rowspan="2">Mean</th>
+                    <th rowspan="2">SD</th>
+                    <th rowspan="2">TE</th>
+                    <th colspan="3">Athlete Results</th>
+                    <th colspan="3">Your Calculations</th>
+                </tr>
+                <tr>
+                    <th>Pre-Test</th>
+                    <th>Post-Test</th>
+                    <th>Change</th>
+                    <th>MDC</th>
+                    <th>MCID</th>
+                    <th>Z-score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="test-icon">🏃</span> Broad Jump (m)</td>
+                    <td>2</td>
+                    <td>0.3</td>
+                    <td>0.1</td>
+                    <td id="broad-start"></td>
+                    <td id="broad-end"></td>
+                    <td id="broad-change" class="change-cell"></td>
+                    <td><input type="text" id="broad-mdc" placeholder="?"></td>
+                    <td><input type="text" id="broad-mcid" placeholder="?"></td>
+                    <td><input type="text" id="broad-zscore" placeholder="?"></td>
+                </tr>
+                <tr>
+                    <td><span class="test-icon">⬆️</span> Jump Mat (cm)</td>
+                    <td>30</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td id="jump-start"></td>
+                    <td id="jump-end"></td>
+                    <td id="jump-change" class="change-cell"></td>
+                    <td><input type="text" id="jump-mdc" placeholder="?"></td>
+                    <td><input type="text" id="jump-mcid" placeholder="?"></td>
+                    <td><input type="text" id="jump-zscore" placeholder="?"></td>
+                </tr>
+                <tr>
+                    <td><span class="test-icon">⏱️</span> 0-5m Sprint (s)</td>
+                    <td>1.5</td>
+                    <td>0.1</td>
+                    <td>0.05</td>
+                    <td id="sprint-start"></td>
+                    <td id="sprint-end"></td>
+                    <td id="sprint-change" class="change-cell"></td>
+                    <td><input type="text" id="sprint-mdc" placeholder="?"></td>
+                    <td><input type="text" id="sprint-mcid" placeholder="?"></td>
+                    <td><input type="text" id="sprint-zscore" placeholder="?"></td>
+                </tr>
+                <tr>
+                    <td><span class="test-icon">❤️</span> 4min Run Test (HR)</td>
+                    <td>130</td>
+                    <td>10</td>
+                    <td>3</td>
+                    <td id="run-start"></td>
+                    <td id="run-end"></td>
+                    <td id="run-change" class="change-cell"></td>
+                    <td><input type="text" id="run-mdc" placeholder="?"></td>
+                    <td><input type="text" id="run-mcid" placeholder="?"></td>
+                    <td><input type="text" id="run-zscore" placeholder="?"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Z-score visualization -->
+    <div class="container z-score-container">
+        <h2 class="z-score-title">Z-Score Performance Distribution</h2>
+        
+        <div class="z-score-plot">
+            <svg id="z-score-svg" width="100%" height="100%" viewBox="0 0 800 220" preserveAspectRatio="xMidYMid meet">
+                <!-- Background -->
+                <rect width="800" height="220" fill="#f8f9fa" rx="10" ry="10"></rect>
+                
+                <!-- Color zones - Taller zones to fill more space -->
+                <rect x="100" y="20" width="200" height="160" fill="#ffcdd2" opacity="0.4"></rect>
+                <rect x="300" y="20" width="200" height="160" fill="#ffecb3" opacity="0.4"></rect>
+                <rect x="500" y="20" width="200" height="160" fill="#c8e6c9" opacity="0.4"></rect>
+                
+                <!-- Normal distribution curve - Taller and more prominent -->
+                <path d="M100,180 Q150,160 200,120 Q250,85 300,60 Q350,50 400,45 Q450,50 500,60 Q550,85 600,120 Q650,160 700,180" fill="none" stroke="#a0a0a0" stroke-width="3"></path>
+                
+                <!-- Zone labels -->
+                <text x="200" y="40" text-anchor="middle" fill="#e74c3c" font-weight="bold">Below average</text>
+                <text x="400" y="40" text-anchor="middle" fill="#f39c12" font-weight="bold">Within average</text>
+                <text x="600" y="40" text-anchor="middle" fill="#2ecc71" font-weight="bold">Above average</text>
+                
+                <!-- Axis -->
+                <line x1="100" y1="180" x2="700" y2="180" stroke="black" stroke-width="2"></line>
+                
+                <!-- Z-score labels -->
+                <text x="100" y="200" text-anchor="middle">-3.0</text>
+                <text x="150" y="200" text-anchor="middle">-2.5</text>
+                <text x="200" y="200" text-anchor="middle">-2.0</text>
+                <text x="250" y="200" text-anchor="middle">-1.5</text>
+                <text x="300" y="200" text-anchor="middle">-1.0</text>
+                <text x="350" y="200" text-anchor="middle">-0.5</text>
+                <text x="400" y="200" text-anchor="middle">0</text>
+                <text x="450" y="200" text-anchor="middle">0.5</text>
+                <text x="500" y="200" text-anchor="middle">1.0</text>
+                <text x="550" y="200" text-anchor="middle">1.5</text>
+                <text x="600" y="200" text-anchor="middle">2.0</text>
+                <text x="650" y="200" text-anchor="middle">2.5</text>
+                <text x="700" y="200" text-anchor="middle">3.0</text>
+                
+                <!-- Tick marks -->
+                <line x1="100" y1="180" x2="100" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="150" y1="180" x2="150" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="200" y1="180" x2="200" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="250" y1="180" x2="250" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="300" y1="180" x2="300" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="350" y1="180" x2="350" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="400" y1="180" x2="400" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="450" y1="180" x2="450" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="500" y1="180" x2="500" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="550" y1="180" x2="550" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="600" y1="180" x2="600" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="650" y1="180" x2="650" y2="185" stroke="black" stroke-width="2"></line>
+                <line x1="700" y1="180" x2="700" y2="185" stroke="black" stroke-width="2"></line>
+                
+                <!-- Labels for markers will be added dynamically -->
+                <g id="z-score-markers"></g>
+            </svg>
+        </div>
+    </div>
+
+    <div id="feedback" style="margin-top: 20px; display: none;">
+        <!-- Content will be added dynamically -->
+    </div>
+    
+    <div class="container" style="margin-top: 20px;">
+        <h3 style="color: var(--primary-color);">Access Performance Analysis</h3>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 15px 0;">
+            <input type="text" id="access-code" placeholder="Enter access code" style="width: 200px;">
+            <button id="unlock-btn" style="background-color: var(--accent-color);">Unlock Analysis</button>
+        </div>
+        <p id="code-feedback" style="text-align: center; font-weight: bold;"></p>
+    </div>
+
+    <script>
+        // Test data structure
+        const tests = [
+            { id: "broad", name: "Broad Jump", mean: 2, sd: 0.3, te: 0.1, unit: "m", decimals: 2, marker: "#f4a261" },
+            { id: "jump", name: "Jump Height", mean: 30, sd: 3, te: 2, unit: "cm", decimals: 1, marker: "#8d99ae" },
+            { id: "sprint", name: "0-5m Sprint", mean: 1.5, sd: 0.1, te: 0.05, unit: "s", decimals: 2, marker: "#457b9d" },
+            { id: "run", name: "4min Run Test", mean: 130, sd: 10, te: 3, unit: "HR", decimals: 1, marker: "#2a9d8f" }
+        ];
+
+        // Store correct answers
+        let correctAnswers = {};
+        
+        // Calculate MDC values once at the start for reference
+        function calculateInitialValues() {
+            tests.forEach(test => {
+                // Manually set the correct MDC and MCID values
+                let mdc, swc, mcid;
+                
+                if (test.id === "jump") {
+                    mdc = 5.54; // Corrected value for Jump Mat
+                    swc = 0.6;  // 0.2 × 3 (SD)
+                    mcid = 6.14; // 5.54 + 0.6
+                } else if (test.id === "run") {
+                    mdc = 8.32; // Corrected value for 4min Run Test
+                    swc = 2.0;  // 0.2 × 10 (SD)
+                    mcid = 10.32; // 8.32 + 2.0
+                } else {
+                    mdc = parseFloat((test.te * Math.sqrt(2) * 1.96).toFixed(test.decimals));
+                    swc = parseFloat((0.2 * test.sd).toFixed(test.decimals));
+                    mcid = parseFloat((mdc + swc).toFixed(test.decimals));
+                }
+                
+                // Store correct answers
+                if (!correctAnswers[test.id]) {
+                    correctAnswers[test.id] = {
+                        mdc: mdc,
+                        mcid: mcid
+                    };
+                }
+            });
+        }
+
+        // Generate random test data
+        function generateTestData() {
+            tests.forEach(test => {
+                // Generate random start value within ±1 SD of mean
+                const startValue = (test.mean + (Math.random() * 2 - 1) * test.sd).toFixed(test.decimals);
+                
+                // Generate random end value that is different from start (mostly improved)
+                let endValue;
+                const improveChance = Math.random();
+                
+                if (improveChance > 0.2) {
+                    // 80% chance of improvement
+                    const improvement = (Math.random() * 2 * test.sd).toFixed(test.decimals);
+                    
+                    // For sprint, lower is better, so subtract
+                    if (test.id === "sprint") {
+                        endValue = (parseFloat(startValue) - parseFloat(improvement)).toFixed(test.decimals);
+                        if (endValue < 0.8) endValue = 0.8; // Keep realistic minimum
+                    } else {
+                        endValue = (parseFloat(startValue) + parseFloat(improvement)).toFixed(test.decimals);
+                    }
+                } else {
+                    // 20% chance of decline
+                    const decline = (Math.random() * test.sd).toFixed(test.decimals);
+                    
+                    // For sprint, higher is worse
+                    if (test.id === "sprint") {
+                        endValue = (parseFloat(startValue) + parseFloat(decline)).toFixed(test.decimals);
+                    } else {
+                        endValue = (parseFloat(startValue) - parseFloat(decline)).toFixed(test.decimals);
+                        if (endValue < 0) endValue = 0; // Keep positive for physical tests
+                    }
+                }
+                
+                // Display values
+                document.getElementById(`${test.id}-start`).textContent = startValue;
+                document.getElementById(`${test.id}-end`).textContent = endValue;
+                
+                // Calculate change
+                const change = (test.id === "sprint") 
+                    ? (parseFloat(startValue) - parseFloat(endValue)).toFixed(test.decimals)  // For sprint, positive change means improvement
+                    : (parseFloat(endValue) - parseFloat(startValue)).toFixed(test.decimals);
+                
+                // Display change automatically
+                document.getElementById(`${test.id}-change`).textContent = change;
+                
+                // Store change in correct answers
+                correctAnswers[test.id].change = parseFloat(change);
+                
+                // Calculate correct Z-score
+                // For sprint: lower is better, so we need to invert the Z-score
+                const zScore = test.id === "sprint"
+                    ? ((test.mean - parseFloat(endValue)) / test.sd).toFixed(2)
+                    : ((parseFloat(endValue) - test.mean) / test.sd).toFixed(2);
+                
+                correctAnswers[test.id].zScore = parseFloat(zScore);
+                
+                // Don't clear input fields
+                document.getElementById(`${test.id}-mdc`).className = "";
+                document.getElementById(`${test.id}-mcid`).className = "";
+                document.getElementById(`${test.id}-zscore`).className = "";
+            });
+            
+            document.getElementById("feedback").innerHTML = "";
+            
+            // Clear Z-score markers
+            document.getElementById("z-score-markers").innerHTML = "";
+        }
+
+        // Track student score
+        let currentScore = 0;
+        let maxScore = 12; // 3 points per test (MDC, MCID, Z-score)
+        
+        // Global variable to remember if feedback is unlocked (alternative to localStorage)
+        let feedbackUnlocked = false;
+        
+        // Function to check access code and reveal feedback
+        function checkAccessCode() {
+            const codeInput = document.getElementById("access-code");
+            const codeFeedback = document.getElementById("code-feedback");
+            const feedbackSection = document.getElementById("feedback");
+            
+            // Set your access code here
+            const correctCode = "performance123"; // Change this to your desired code
+            
+            if (codeInput.value === correctCode) {
+                feedbackSection.style.display = "block";
+                codeFeedback.textContent = "✅ Correct code! Analysis unlocked.";
+                codeFeedback.style.color = "var(--success-color)";
+                
+                // Scroll to the feedback section
+                feedbackSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // Remember that feedback is unlocked
+                feedbackUnlocked = true;
+                
+                // Try to use localStorage if available, but don't worry if it fails
+                try {
+                    localStorage.setItem("feedbackUnlocked", "true");
+                } catch (error) {
+                    // Silently ignore localStorage errors
+                    console.log("Note: localStorage not available, using in-memory state instead");
+                }
+            } else {
+                codeFeedback.textContent = "❌ Incorrect code. Please try again.";
+                codeFeedback.style.color = "var(--danger-color)";
+                feedbackSection.style.display = "none";
+            }
+        }
+        
+        // Check if feedback was previously unlocked
+        function checkPreviousUnlock() {
+            // First check our in-memory variable
+            if (feedbackUnlocked) {
+                document.getElementById("feedback").style.display = "block";
+                document.getElementById("code-feedback").textContent = "✅ Analysis unlocked.";
+                document.getElementById("code-feedback").style.color = "var(--success-color)";
+                return;
+            }
+            
+            // Try localStorage as a fallback, with try/catch to handle sandbox restrictions
+            try {
+                if (localStorage.getItem("feedbackUnlocked") === "true") {
+                    document.getElementById("feedback").style.display = "block";
+                    document.getElementById("code-feedback").textContent = "✅ Analysis unlocked.";
+                    document.getElementById("code-feedback").style.color = "var(--success-color)";
+                    feedbackUnlocked = true;
+                }
+            } catch (error) {
+                // Silently ignore localStorage errors
+                console.log("Note: localStorage not available, using in-memory state only");
+            }
+        }
+        
+        // Convert Z-score to X position on the SVG plot
+        function zScoreToXPosition(zScore) {
+            // Constrain z-score between -3 and 3 for display purposes
+            const constrainedZ = Math.max(-3, Math.min(3, zScore));
+            // Map from z-score range (-3 to 3) to x position (100 to 700)
+            return 400 + (constrainedZ * 100);
+        }
+        
+        // Add a marker to the Z-score plot
+        function addZScoreMarker(testId, zScore, color) {
+            const xPos = zScoreToXPosition(zScore);
+            const yPos = 100 + Math.random() * 50; // Higher position for better visibility in the enlarged plot
+            
+            const markersGroup = document.getElementById("z-score-markers");
+            if (!markersGroup) return;
+            
+            // Create marker element
+            const marker = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            marker.setAttribute("cx", xPos);
+            marker.setAttribute("cy", yPos);
+            marker.setAttribute("r", "12"); // Larger markers
+            marker.setAttribute("fill", color);
+            marker.setAttribute("stroke", "white");
+            marker.setAttribute("stroke-width", "2");
+            marker.setAttribute("id", `marker-${testId}`);
+            markersGroup.appendChild(marker);
+            
+            // Create label
+            const testName = tests.find(test => test.id === testId).name;
+            const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label.setAttribute("x", xPos);
+            label.setAttribute("y", yPos - 18); // Adjusted for larger markers
+            label.setAttribute("text-anchor", "middle");
+            label.setAttribute("font-size", "13"); // Slightly larger
+            label.setAttribute("font-weight", "bold");
+            label.setAttribute("id", `label-${testId}`);
+            label.textContent = testName;
+            markersGroup.appendChild(label);
+        }
+        
+        // Update Z-score markers based on input values
+        function updateZScoreMarkers() {
+            tests.forEach(test => {
+                const zScoreInput = document.getElementById(`${test.id}-zscore`);
+                if (zScoreInput && zScoreInput.value && !isNaN(parseFloat(zScoreInput.value))) {
+                    const zScore = parseFloat(zScoreInput.value);
+                    const marker = document.getElementById(`marker-${test.id}`);
+                    
+                    if (marker) {
+                        // Update existing marker
+                        marker.setAttribute("cx", zScoreToXPosition(zScore));
+                    } else {
+                        // Add new marker
+                        addZScoreMarker(test.id, zScore, test.marker);
+                    }
+                }
+            });
+        }
+        
+        // Check user answers
+        function checkAnswers() {
+            try {
+                let correctCount = 0;
+                let feedbackMessage = "<h3>Performance Analysis:</h3>";
+                
+                // Show score tracker
+                const scoreTracker = document.getElementById("score-tracker");
+                if (scoreTracker) scoreTracker.style.display = "block";
+                
+                // Clear existing markers
+                const markersElement = document.getElementById("z-score-markers");
+                if (markersElement) markersElement.innerHTML = "";
+                
+                tests.forEach(test => {
+                    try {
+                        const mdcInput = document.getElementById(`${test.id}-mdc`);
+                        const mcidInput = document.getElementById(`${test.id}-mcid`);
+                        const zScoreInput = document.getElementById(`${test.id}-zscore`);
+                        
+                        if (!mdcInput || !mcidInput || !zScoreInput) return;
+                        
+                        const userMdc = parseFloat(mdcInput.value.replace(',', '.')) || 0;
+                        const userMcid = parseFloat(mcidInput.value.replace(',', '.')) || 0;
+                        const userZScore = parseFloat(zScoreInput.value.replace(',', '.')) || 0;
+                        
+                        const mdcCorrect = Math.abs(userMdc - correctAnswers[test.id].mdc) < 0.01;
+                        const mcidCorrect = Math.abs(userMcid - correctAnswers[test.id].mcid) < 0.01;
+                        const zScoreCorrect = Math.abs(userZScore - correctAnswers[test.id].zScore) < 0.1; // Allow a small margin of error
+                        
+                        // Count correct answers
+                        if (mdcCorrect) correctCount++;
+                        if (mcidCorrect) correctCount++;
+                        if (zScoreCorrect) correctCount++;
+                        
+                        // Set classes for visual feedback
+                        mdcInput.className = mdcCorrect ? "correct" : "incorrect";
+                        mcidInput.className = mcidCorrect ? "correct" : "incorrect";
+                        zScoreInput.className = zScoreCorrect ? "correct" : "incorrect";
+                        
+                        // Add marker to Z-score plot if Z-score is provided
+                        if (!isNaN(userZScore)) {
+                            addZScoreMarker(test.id, userZScore, test.marker);
+                        }
+                        
+                        // Get the test values
+                        const startElement = document.getElementById(`${test.id}-start`);
+                        const endElement = document.getElementById(`${test.id}-end`);
+                        
+                        if (!startElement || !endElement) return;
+                        
+                        const startValue = parseFloat(startElement.textContent || "0");
+                        const endValue = parseFloat(endElement.textContent || "0");
+                        
+                        // For sprint, lower is better
+                        const improved = (test.id === "sprint") ? endValue < startValue : endValue > startValue;
+                        const changeValue = Math.abs(correctAnswers[test.id].change || 0);
+                        const exceedsMDC = changeValue > correctAnswers[test.id].mdc;
+                        const exceedsMCID = changeValue > correctAnswers[test.id].mcid;
+                        
+                        // Get appropriate emoji for result
+                        let resultEmoji = "⚠️";
+                        if (improved) {
+                            if (exceedsMCID) resultEmoji = "🌟";
+                            else if (exceedsMDC) resultEmoji = "✅";
+                            else resultEmoji = "❓";
+                        }
+                        
+                        // Add Z-score interpretation
+                        const zScoreVal = correctAnswers[test.id].zScore || 0;
+                        let zScoreInterpretation = "";
+                        if (Math.abs(zScoreVal) < 1) {
+                            zScoreInterpretation = `The Z-score of ${zScoreVal.toFixed(2)} indicates a performance within the average range.`;
+                        } else if (zScoreVal >= 1) {
+                            zScoreInterpretation = `The Z-score of ${zScoreVal.toFixed(2)} indicates an above-average performance.`;
+                        } else {
+                            zScoreInterpretation = `The Z-score of ${zScoreVal.toFixed(2)} indicates a below-average performance.`;
+                        }
+                        
+                        feedbackMessage += `<p><strong>${resultEmoji} ${test.name}:</strong> `;
+                        
+                        if (!improved) {
+                            feedbackMessage += `The athlete showed a decline in performance. `;
+                        } else if (exceedsMCID) {
+                            feedbackMessage += `The improvement is both reliable (exceeds MDC) and clinically meaningful (exceeds MCID)! This is a significant improvement. `;
+                        } else if (exceedsMDC) {
+                            feedbackMessage += `The improvement is reliable (exceeds MDC) but may not be clinically meaningful yet. More training could yield better results. `;
+                        } else {
+                            feedbackMessage += `The change is within the range of measurement error. We can't confidently say there's been real improvement. `;
+                        }
+                        
+                        feedbackMessage += zScoreInterpretation;
+                        
+                        // Add specific interpretation
+                        if (improved) {
+                            feedbackMessage += `<br><em>Coach's note: `;
+                            if (test.id === "broad") {
+                                feedbackMessage += `The athlete's horizontal power ${exceedsMCID ? "has significantly improved" : exceedsMDC ? "is showing improvement" : "needs more focus"}.`;
+                            } else if (test.id === "jump") {
+                                feedbackMessage += `The athlete's vertical jump ${exceedsMCID ? "has greatly improved" : exceedsMDC ? "is improving" : "needs more explosive training"}.`;
+                            } else if (test.id === "sprint") {
+                                feedbackMessage += `The athlete's acceleration ${exceedsMCID ? "has improved dramatically" : exceedsMDC ? "is showing good progress" : "needs more speed work"}.`;
+                            } else if (test.id === "run") {
+                                feedbackMessage += `The athlete's endurance ${exceedsMCID ? "has significantly improved" : exceedsMDC ? "is improving" : "needs more aerobic training"}.`;
+                            }
+                            feedbackMessage += `</em>`;
+                        }
+                        
+                        feedbackMessage += `</p>`;
+                    } catch (error) {
+                        console.error(`Error checking answers for ${test.id}:`, error);
+                    }
+                });
+                
+                // Update score
+                currentScore = correctCount;
+                
+                const currentScoreElement = document.getElementById("current-score");
+                const maxScoreElement = document.getElementById("max-score");
+                const scoreProgressElement = document.getElementById("score-progress");
+                
+                if (currentScoreElement) currentScoreElement.textContent = currentScore;
+                if (maxScoreElement) maxScoreElement.textContent = maxScore;
+                
+                // Update progress bar
+                if (scoreProgressElement) {
+                    const progressPercentage = (currentScore / maxScore) * 100;
+                    scoreProgressElement.style.width = `${progressPercentage}%`;
+                }
+                
+                // Add summary based on score
+                if (currentScore === maxScore) {
+                    feedbackMessage += `<p style='padding: 10px; background-color: #d4edda; color: #155724; border-radius: 5px;'><strong>🏆 Perfect score! ${currentScore}/${maxScore}</strong> - You've mastered the calculations! Your athlete interpretations will be spot-on.</p>`;
+                } else if (currentScore >= maxScore * 0.75) {
+                    feedbackMessage += `<p style='padding: 10px; background-color: #d1ecf1; color: #0c5460; border-radius: 5px;'><strong>🥈 Great work! ${currentScore}/${maxScore}</strong> - You're almost there! Just a few minor adjustments needed.</p>`;
+                } else if (currentScore >= maxScore * 0.5) {
+                    feedbackMessage += `<p style='padding: 10px; background-color: #fff3cd; color: #856404; border-radius: 5px;'><strong>👍 Good effort! ${currentScore}/${maxScore}</strong> - You're on the right track, but review the formulas again.</p>`;
+                } else {
+                    feedbackMessage += `<p style='padding: 10px; background-color: #f8d7da; color: #721c24; border-radius: 5px;'><strong>🔄 Keep practicing! ${currentScore}/${maxScore}</strong> - Let's review the calculations. Remember MDC = TE × √2 × 1.96, MCID = MDC + 0.2×SD, and Z-score = (Post-Test - mean) / SD</p>`;
+                }
+                
+                const feedbackElement = document.getElementById("feedback");
+                if (feedbackElement) feedbackElement.innerHTML = feedbackMessage;
+            } catch (error) {
+                console.error("Error in checkAnswers function:", error);
+            }
+        }
+
+        // Toggle formulas visibility
+        function toggleFormulas() {
+            const formulaBox = document.getElementById("formula-box");
+            const button = document.getElementById("formula-btn");
+            
+            if (formulaBox.style.display === "none") {
+                formulaBox.style.display = "block";
+                button.textContent = "Hide Formulas";
+            } else {
+                formulaBox.style.display = "none";
+                button.textContent = "Show Formulas";
+            }
+        }
+
+        // Reset the table
+        function resetTable() {
+            tests.forEach(test => {
+                document.getElementById(`${test.id}-start`).textContent = "";
+                document.getElementById(`${test.id}-end`).textContent = "";
+                document.getElementById(`${test.id}-change`).textContent = "";
+                document.getElementById(`${test.id}-mdc`).value = "";
+                document.getElementById(`${test.id}-mcid`).value = "";
+                document.getElementById(`${test.id}-zscore`).value = "";
+                document.getElementById(`${test.id}-mdc`).className = "";
+                document.getElementById(`${test.id}-mcid`).className = "";
+                document.getElementById(`${test.id}-zscore`).className = "";
+            });
+            
+            document.getElementById("feedback").innerHTML = "";
+            document.getElementById("z-score-markers").innerHTML = "";
+        }
+
+        // Event listener for Z-score inputs to update the plot
+        function setupZScoreListeners() {
+            tests.forEach(test => {
+                const zScoreInput = document.getElementById(`${test.id}-zscore`);
+                zScoreInput.addEventListener("input", function() {
+                    updateZScoreMarkers();
+                });
+            });
+        }
+
+        // Initialize
+        calculateInitialValues();
+        
+        // Add event listeners
+        document.getElementById("generate-btn").addEventListener("click", generateTestData);
+        document.getElementById("check-btn").addEventListener("click", checkAnswers);
+        document.getElementById("formula-btn").addEventListener("click", toggleFormulas);
+        document.getElementById("reset-btn").addEventListener("click", resetTable);
+        document.getElementById("unlock-btn").addEventListener("click", checkAccessCode);
+        
+        // Setup Z-score listeners
+        setupZScoreListeners();
+        
+        // Check if feedback was previously unlocked
+        checkPreviousUnlock();
+    </script>
+</body>
+</html>
