@@ -890,14 +890,7 @@
                 // If feedback is unlocked, update with performance analysis
                 if (feedbackUnlocked) {
                     updatePerformanceAnalysis();
-                } else {
-                    // Just show basic score if feedback is not unlocked
-                    const feedbackElement = document.getElementById("feedback");
-                    if (feedbackElement) {
-                        feedbackElement.innerHTML = `<h3>Your Score</h3>${scoreMessage}<p>Use the access code below to unlock detailed performance analysis.</p>`;
-                        feedbackElement.style.display = "block";
-                    }
-                }
+                } 
             } catch (error) {
                 console.error("Error in checkAnswers function:", error);
             }
