@@ -376,7 +376,7 @@
                     <li>MDC (Minimal Detectable Change) <span class="tooltip">ⓘ<span class="tooltiptext">The smallest change that represents a real change, not just measurement error.</span></span></li>
                     <li>MCID (Minimal Clinically Important Difference) <span class="tooltip">ⓘ<span class="tooltiptext">The threshold for a change that would be meaningful for the client/athlete</span></span></li>
                 </ul>
-                <li>Calculate Z-scores for each test</li>
+                <li>Calculate Z-scores for each test<span class="tooltip">ⓘ<span class="tooltiptext">For the Sprint and Run test Z scores will be flipped within the plot.</span></span></li>
                 <li>Click "Check Answers" to see how accurate your calculations are</li>
                 <li>Practice explaining what these results mean for the clients performance</li>
             </ol>
@@ -548,10 +548,10 @@
     </div>
     
     <div class="container" style="margin-top: 20px;">
-        <h3 style="color: var(--primary-color);">Additional Info</h3>
+        <h3 style="color: var(--primary-color);">
         <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 15px 0;">
             <input type="text" id="access-code" placeholder="Enter access code" style="width: 200px;">
-            <button id="unlock-btn" style="background-color: var(--accent-color);">Unlock</button>
+            <button id="unlock-btn" style="background-color: var(--accent-color);">Enter</button>
         </div>
         <p id="code-feedback" style="text-align: center; font-weight: bold;"></p>
     </div>
@@ -637,10 +637,8 @@
                 document.getElementById(`${test.id}-start`).textContent = startValue;
                 document.getElementById(`${test.id}-end`).textContent = endValue;
                 
-                // Calculate change - for sprint and run tests, positive change means improvement (lower value is better)
-                const change = (test.id === "sprint" || test.id === "run") 
-                    ? (parseFloat(startValue) - parseFloat(endValue)).toFixed(test.decimals)  
-                    : (parseFloat(endValue) - parseFloat(startValue)).toFixed(test.decimals);
+                // Calculate change - always post - pre, regardless of test type
+                const change = (parseFloat(endValue) - parseFloat(startValue)).toFixed(test.decimals);
                 
                 // Display change automatically
                 document.getElementById(`${test.id}-change`).textContent = change;
@@ -695,7 +693,11 @@
                     feedbackSection.style.display = "block";
                     // Scroll to the feedback section
                     feedbackSection.scrollIntoView({ behavior: 'smooth' });
-                } 
+                } else {
+                    feedbackSection.innerHTML = "<h3>Performance Analysis</h3><p>Generate athlete data and check your calculations to see the detailed analysis.</p>";
+                    feedbackSection.style.display = "block";
+                }
+                
                 // Try to use localStorage if available, but don't worry if it fails
                 try {
                     localStorage.setItem("feedbackUnlocked", "true");
@@ -890,7 +892,14 @@
                 // If feedback is unlocked, update with performance analysis
                 if (feedbackUnlocked) {
                     updatePerformanceAnalysis();
-                } 
+                } else {
+                    // Just show basic score if feedback is not unlocked
+                    const feedbackElement = document.getElementById("feedback");
+                    if (feedbackElement) {
+                        feedbackElement.innerHTML = `<h3>Your Score</h3>${scoreMessage}`;
+                        feedbackElement.style.display = "block";
+                    }
+                }
             } catch (error) {
                 console.error("Error in checkAnswers function:", error);
             }
@@ -911,8 +920,11 @@
                     const startValue = parseFloat(startElement.textContent);
                     const endValue = parseFloat(endElement.textContent);
                     
-                    // For sprint and run tests, lower is better
-                    const improved = (test.id === "sprint" || test.id === "run") ? endValue < startValue : endValue > startValue;
+                    // For sprint and run tests, a negative change is an improvement
+                    const improved = (test.id === "sprint" || test.id === "run") 
+                        ? parseFloat(correctAnswers[test.id].change) < 0 
+                        : parseFloat(correctAnswers[test.id].change) > 0;
+                    
                     const changeValue = Math.abs(correctAnswers[test.id].change || 0);
                     const exceedsMDC = changeValue > correctAnswers[test.id].mdc;
                     const exceedsMCID = changeValue > correctAnswers[test.id].mcid;
